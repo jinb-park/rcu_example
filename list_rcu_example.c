@@ -121,7 +121,10 @@ static int borrow_book(int id, int async) {
 
 	memcpy(new_b, old_b, sizeof(struct book));
 	new_b->borrow = 1;
+	
+	spin_lock(&books_lock);
 	list_replace_rcu(&old_b->node, &new_b->node);
+	spin_unlock(&books_lock);
 
 	rcu_read_unlock();
 
@@ -196,7 +199,10 @@ static int return_book(int id, int async) {
 
 	memcpy(new_b, old_b, sizeof(struct book));
 	new_b->borrow = 0;
+	
+	spin_lock(&books_lock);
 	list_replace_rcu(&old_b->node, &new_b->node);
+	spin_unlock(&books_lock);
 
 	rcu_read_unlock();
 
