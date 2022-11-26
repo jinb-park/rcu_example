@@ -1,14 +1,13 @@
 obj-m := list_rcu_example.o 
 
 # Please set your kernel directory before build
-KDIR:=""
+KDIR := /lib/modules/$(shell uname -r)/build
 
 ccflags-y += -Wall
 ccflags-y += -Werror
 
 default:
-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
 clean:
-	rm -rf *.o *.ko *.mod *.symvers *.order *.mod.c
-
+	$(MAKE) -C $(KDIR) M=$(PWD) clean
